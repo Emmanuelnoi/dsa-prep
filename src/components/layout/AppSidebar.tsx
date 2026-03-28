@@ -6,7 +6,7 @@ import { categories, getTemplatesByCategory, templateIndex } from '@/data/index'
 import { openPalette } from '@/lib/paletteStore'
 import { ProgressRing } from '@/components/features/ProgressRing'
 import { cn } from '@/lib/utils'
-import type { CategoryGroup, StreakData } from '@/types'
+import type { CategoryGroup, SidebarFilter, StreakData, QuizRecord } from '@/types'
 
 const GROUPS: { id: CategoryGroup; label: string }[] = [
   { id: 'foundations', label: 'Foundations' },
@@ -14,13 +14,23 @@ const GROUPS: { id: CategoryGroup; label: string }[] = [
   { id: 'advanced', label: 'Advanced' },
 ]
 
+const FILTERS: { id: SidebarFilter; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'bookmarked', label: '⭐' },
+  { id: 'review-due', label: '🔄' },
+  { id: 'completed', label: '✅' },
+]
+
 interface AppSidebarProps {
   progress: Record<string, string>
   bookmarks: string[]
   streak: StreakData
+  quizRatings: Record<string, QuizRecord>
+  sidebarFilter: SidebarFilter
+  onFilterChange: (filter: SidebarFilter) => void
 }
 
-export function AppSidebar({ progress, streak }: AppSidebarProps) {
+export function AppSidebar({ progress, bookmarks, streak, quizRatings, sidebarFilter, onFilterChange }: AppSidebarProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { categoryId, templateId } = useParams()
@@ -42,6 +52,20 @@ export function AppSidebar({ progress, streak }: AppSidebarProps) {
   const openSearch = () => openPalette()
 
   const isCheatsheet = location.pathname === '/cheatsheet'
+  const today = new Date().toISOString().split('T')[0]
+
+  const isTemplateVisible = (id: string): boolean => {
+    switch (sidebarFilter) {
+      case 'bookmarked':
+        return bookmarks.includes(id)
+      case 'review-due':
+        return !!quizRatings[id] && quizRatings[id].nextReviewDate <= today
+      case 'completed':
+        return progress[id] === 'reviewed' || progress[id] === 'mastered'
+      default:
+        return true
+    }
+  }
 
   // ── Collapsed state: narrow strip with toggle only ──────────────────────
   if (collapsed) {
@@ -138,6 +162,25 @@ export function AppSidebar({ progress, streak }: AppSidebarProps) {
         </button>
       </div>
 
+      {/* Filter chips */}
+      <div className="px-3 pb-2 flex gap-1.5">
+        {FILTERS.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => onFilterChange(f.id)}
+            className="flex-1 rounded-md py-1 text-xs font-medium transition-colors"
+            aria-pressed={sidebarFilter === f.id}
+            style={{
+              backgroundColor: sidebarFilter === f.id ? 'var(--accent-subtle)' : 'var(--bg-elevated)',
+              color: sidebarFilter === f.id ? 'var(--accent-primary)' : 'var(--text-muted)',
+              border: `1px solid ${sidebarFilter === f.id ? 'var(--accent-primary)' : 'transparent'}`,
+            }}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       {/* Navigation — invisible scrollbar */}
       <div className="sidebar-scroll flex-1 px-2 pb-2 overflow-y-auto">
         {GROUPS.map((group) => {
@@ -161,7 +204,9 @@ export function AppSidebar({ progress, streak }: AppSidebarProps) {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 {groupCategories.map((cat) => {
-                  const templates = getTemplatesByCategory(cat.id)
+                  const allTemplates = getTemplatesByCategory(cat.id)
+                  const templates = allTemplates.filter((t) => isTemplateVisible(t.id))
+                  if (sidebarFilter !== 'all' && templates.length === 0) return null
                   const isCatOpen = expandedCategories.includes(cat.id)
                   const isActiveCat = categoryId === cat.id
 

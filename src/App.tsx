@@ -13,7 +13,15 @@ import { CheatsheetPage } from '@/pages/CheatsheetPage'
 import useAppState from '@/hooks/useAppState'
 
 function AppShell() {
-  const { state, setProgress, toggleBookmark, setTheme, completeOnboarding } = useAppState()
+  const {
+    state,
+    setProgress,
+    toggleBookmark,
+    setTheme,
+    completeOnboarding,
+    setViewMode,
+    setSidebarFilter,
+  } = useAppState()
 
   // Apply theme class on mount and on change
   useEffect(() => {
@@ -29,6 +37,9 @@ function AppShell() {
           progress={state.progress}
           bookmarks={state.bookmarks}
           streak={state.streak}
+          quizRatings={state.quizRatings}
+          sidebarFilter={state.sidebarFilter}
+          onFilterChange={setSidebarFilter}
         />
       </div>
 
@@ -53,8 +64,10 @@ function AppShell() {
                   progress={state.progress}
                   bookmarks={state.bookmarks}
                   theme={state.theme}
+                  viewMode={state.viewMode}
                   onProgressChange={(id, status) => setProgress(id, status as import("@/types").TopicStatus)}
                   onBookmarkToggle={toggleBookmark}
+                  onViewModeChange={setViewMode}
                 />
               }
             />

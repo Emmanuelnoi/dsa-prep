@@ -3,7 +3,7 @@ import { categories, templateIndex, getTemplatesByCategory, getCategoryMeta } fr
 
 describe('data/index', () => {
   it('has 14 categories', () => {
-    expect(categories).toHaveLength(14)
+    expect(categories).toHaveLength(20)
   })
 
   it('has at least 60 template metadata entries', () => {

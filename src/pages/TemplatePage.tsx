@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
@@ -17,6 +17,8 @@ import { loadCategory } from '@/data/index'
 import { CodeViewer } from '@/components/features/CodeViewer'
 import { ExplanationPanel } from '@/components/features/ExplanationPanel'
 import { QuizCard } from '@/components/features/QuizCard'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+import { saveState } from '@/lib/storage'
 import type { Template, ViewMode } from '@/types'
 
 interface TemplatePageProps {
@@ -49,6 +51,11 @@ export function TemplatePage({
   const [template, setTemplate] = useState<Template | null>(null)
   const [loading, setLoading] = useState(true)
   const [allTemplates, setAllTemplates] = useState<Template[]>([])
+  const [splitRatio, setSplitRatio] = useState(() => {
+    try { return parseFloat(localStorage.getItem('dsa-split-ratio') || '45') || 45 } catch { return 45 }
+  })
+  const isDragging = useRef(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!categoryId) return
@@ -68,6 +75,30 @@ export function TemplatePage({
     run()
     return () => { cancelled = true }
   }, [categoryId, templateId])
+
+  // Drag handle for split pane
+  const handleDragStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    isDragging.current = true
+    const onMove = (ev: MouseEvent) => {
+      if (!isDragging.current || !containerRef.current) return
+      const rect = containerRef.current.getBoundingClientRect()
+      const ratio = Math.min(70, Math.max(30, ((ev.clientX - rect.left) / rect.width) * 100))
+      setSplitRatio(ratio)
+    }
+    const onUp = () => {
+      isDragging.current = false
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+      setSplitRatio((r) => {
+        try { localStorage.setItem('dsa-split-ratio', String(r)) } catch { /* noop */ }
+        saveState({})
+        return r
+      })
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }, [])
 
   if (loading) {
     return (
@@ -94,6 +125,13 @@ export function TemplatePage({
   const isBookmarked = bookmarks.includes(template.id)
   const status = progress[template.id] ?? 'not-started'
   const shikiTheme = theme === 'dark' ? 'github-dark' : 'github-light'
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useKeyboardShortcuts({
+    onPrev: prevTemplate ? () => navigate(`/category/${categoryId}/template/${prevTemplate.id}`) : undefined,
+    onNext: nextTemplate ? () => navigate(`/category/${categoryId}/template/${nextTemplate.id}`) : undefined,
+    onViewMode: onViewModeChange,
+  })
 
   const explanationContent = (
     <>
@@ -193,7 +231,7 @@ export function TemplatePage({
       </div>
 
       {/* Desktop content area — view-mode-aware */}
-      <div className="flex-1 min-h-0 flex overflow-hidden">
+      <div ref={containerRef} className="flex-1 min-h-0 flex overflow-hidden">
 
         {/* ── DESKTOP ── */}
         <div className="hidden lg:flex flex-1 min-w-0">
@@ -210,12 +248,21 @@ export function TemplatePage({
           {viewMode === 'split' && (
             <>
               <ScrollArea
-                className="border-r"
-                style={{ width: '45%', minWidth: '45%', borderColor: 'var(--border-default)' }}
+                className="overflow-hidden"
+                style={{ width: `${splitRatio}%`, minWidth: '30%', flexShrink: 0 }}
               >
                 {explanationContent}
               </ScrollArea>
-              <ScrollArea className="flex-1">
+              {/* Drag handle */}
+              <div
+                onMouseDown={handleDragStart}
+                className="w-1 flex-shrink-0 cursor-col-resize hover:bg-[var(--accent-primary)] transition-colors"
+                style={{ backgroundColor: 'var(--border-default)' }}
+                role="separator"
+                aria-orientation="vertical"
+                aria-label="Resize panels"
+              />
+              <ScrollArea className="flex-1 min-w-0">
                 {codeContent}
               </ScrollArea>
             </>

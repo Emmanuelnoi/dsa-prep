@@ -243,3 +243,7 @@ code, pre {
     @apply font-sans;
   }
 }
+
+/* Invisible scrollbar — scrollable but no visible thumb */
+.sidebar-scroll::-webkit-scrollbar { display: none; }
+.sidebar-scroll { scrollbar-width: none; -ms-overflow-style: none; }

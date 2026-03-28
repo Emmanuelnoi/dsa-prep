@@ -5,6 +5,7 @@ export const categories: CategoryMeta[] = [
   { id: 'binary-search', title: 'Binary Search', icon: 'Search', group: 'foundations', templateCount: 5 },
   { id: 'two-pointers', title: 'Two Pointers', icon: 'Columns2', group: 'foundations', templateCount: 4 },
   { id: 'sliding-window', title: 'Sliding Window', icon: 'PanelLeftOpen', group: 'foundations', templateCount: 4 },
+  { id: 'hash-map', title: 'Hash Map / Set', icon: 'Hash', group: 'foundations', templateCount: 5 },
   { id: 'bfs-dfs', title: 'BFS / DFS', icon: 'Network', group: 'trees-graphs', templateCount: 5 },
   { id: 'dynamic-programming', title: 'Dynamic Programming', icon: 'Table2', group: 'advanced', templateCount: 8 },
   { id: 'backtracking', title: 'Backtracking', icon: 'Undo2', group: 'advanced', templateCount: 5 },
@@ -15,6 +16,11 @@ export const categories: CategoryMeta[] = [
   { id: 'trees', title: 'Trees', icon: 'TreePine', group: 'trees-graphs', templateCount: 6 },
   { id: 'graphs', title: 'Graphs', icon: 'Waypoints', group: 'trees-graphs', templateCount: 4 },
   { id: 'intervals', title: 'Intervals', icon: 'CalendarRange', group: 'advanced', templateCount: 3 },
+  { id: 'greedy', title: 'Greedy', icon: 'Zap', group: 'advanced', templateCount: 5 },
+  { id: 'bit-manipulation', title: 'Bit Manipulation', icon: 'Binary', group: 'advanced', templateCount: 5 },
+  { id: 'topological-sort', title: 'Topological Sort', icon: 'GitCommitHorizontal', group: 'trees-graphs', templateCount: 4 },
+  { id: 'stack', title: 'Stack / Monotonic Stack', icon: 'Layers2', group: 'foundations', templateCount: 5 },
+  { id: 'matrix', title: 'Matrix / 2D Grid', icon: 'Grid2X2', group: 'trees-graphs', templateCount: 5 },
 ]
 
 export const templateIndex: TemplateMeta[] = [
@@ -58,6 +64,8 @@ export const templateIndex: TemplateMeta[] = [
   { id: 'dp-unbounded-knapsack', title: 'Unbounded Knapsack', categoryId: 'dynamic-programming', difficulty: 'advanced', estimatedMinutes: 15, tags: ['dp', 'knapsack'], timeComplexity: 'O(n·W)', spaceComplexity: 'O(W)' },
   { id: 'dp-lcs', title: 'Longest Common Subsequence', categoryId: 'dynamic-programming', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['dp', 'string', 'subsequence'], timeComplexity: 'O(m·n)', spaceComplexity: 'O(m·n)' },
   { id: 'dp-lis', title: 'Longest Increasing Subsequence', categoryId: 'dynamic-programming', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['dp', 'subsequence', 'binary-search'], timeComplexity: 'O(n log n)', spaceComplexity: 'O(n)' },
+  { id: 'dp-word-break', title: 'Word Break', categoryId: 'dynamic-programming', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['dp', 'word-break', 'string'], timeComplexity: 'O(n²)', spaceComplexity: 'O(n)' },
+  { id: 'dp-edit-distance', title: 'Edit Distance', categoryId: 'dynamic-programming', difficulty: 'advanced', estimatedMinutes: 20, tags: ['dp', 'edit-distance', 'string', '2d-dp'], timeComplexity: 'O(m·n)', spaceComplexity: 'O(n)' },
   // Backtracking
   { id: 'bt-permutations', title: 'Permutations', categoryId: 'backtracking', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['backtracking', 'recursion'], timeComplexity: 'O(n!)', spaceComplexity: 'O(n)' },
   { id: 'bt-combinations', title: 'Combinations', categoryId: 'backtracking', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['backtracking', 'recursion'], timeComplexity: 'O(C(n,k))', spaceComplexity: 'O(k)' },
@@ -82,6 +90,7 @@ export const templateIndex: TemplateMeta[] = [
   { id: 'll-cycle', title: 'Detect Cycle', categoryId: 'linked-list', difficulty: 'intermediate', estimatedMinutes: 10, tags: ['linked-list', 'fast-slow', 'cycle-detection'], timeComplexity: 'O(n)', spaceComplexity: 'O(1)' },
   { id: 'll-merge-sorted', title: 'Merge Sorted Lists', categoryId: 'linked-list', difficulty: 'beginner', estimatedMinutes: 10, tags: ['linked-list', 'merge', 'two-pointers'], timeComplexity: 'O(n + m)', spaceComplexity: 'O(1)' },
   { id: 'll-lru-cache', title: 'LRU Cache', categoryId: 'linked-list', difficulty: 'advanced', estimatedMinutes: 20, tags: ['linked-list', 'hashmap', 'design'], timeComplexity: 'O(1)', spaceComplexity: 'O(n)' },
+  { id: 'll-merge-k', title: 'Merge K Sorted Lists', categoryId: 'linked-list', difficulty: 'advanced', estimatedMinutes: 20, tags: ['linked-list', 'heap', 'merge'], timeComplexity: 'O(N log k)', spaceComplexity: 'O(k)' },
   // Trees
   { id: 'tree-inorder', title: 'Inorder Traversal', categoryId: 'trees', difficulty: 'beginner', estimatedMinutes: 5, tags: ['tree', 'traversal', 'bst'], timeComplexity: 'O(n)', spaceComplexity: 'O(h)' },
   { id: 'tree-preorder', title: 'Preorder Traversal', categoryId: 'trees', difficulty: 'beginner', estimatedMinutes: 5, tags: ['tree', 'traversal'], timeComplexity: 'O(n)', spaceComplexity: 'O(h)' },
@@ -94,10 +103,45 @@ export const templateIndex: TemplateMeta[] = [
   { id: 'graph-bellman-ford', title: 'Bellman-Ford', categoryId: 'graphs', difficulty: 'advanced', estimatedMinutes: 15, tags: ['graph', 'shortest-path', 'negative-weights'], timeComplexity: 'O(V·E)', spaceComplexity: 'O(V)' },
   { id: 'graph-prims', title: "Prim's MST", categoryId: 'graphs', difficulty: 'advanced', estimatedMinutes: 15, tags: ['graph', 'mst', 'heap'], timeComplexity: 'O((V+E) log V)', spaceComplexity: 'O(V)' },
   { id: 'graph-kruskals', title: "Kruskal's MST", categoryId: 'graphs', difficulty: 'advanced', estimatedMinutes: 15, tags: ['graph', 'mst', 'union-find'], timeComplexity: 'O(E log E)', spaceComplexity: 'O(V)' },
+  // Hash Map / Set
+  { id: 'hm-frequency-count', title: 'Frequency / Count Map', categoryId: 'hash-map', difficulty: 'beginner', estimatedMinutes: 5, tags: ['hash-map', 'counter', 'frequency'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'hm-two-sum', title: 'Two Sum (Hash Map)', categoryId: 'hash-map', difficulty: 'beginner', estimatedMinutes: 10, tags: ['hash-map', 'complement', 'two-sum'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'hm-hash-set', title: 'Hash Set Patterns', categoryId: 'hash-map', difficulty: 'beginner', estimatedMinutes: 10, tags: ['hash-set', 'deduplication', 'consecutive'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'hm-sliding-window-map', title: 'Hash Map + Sliding Window', categoryId: 'hash-map', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['hash-map', 'sliding-window', 'substring'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'hm-prefix-sum', title: 'Prefix Sum + Hash Map', categoryId: 'hash-map', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['hash-map', 'prefix-sum', 'subarray'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
   // Intervals
   { id: 'int-merge', title: 'Merge Intervals', categoryId: 'intervals', difficulty: 'intermediate', estimatedMinutes: 10, tags: ['intervals', 'sorting'], timeComplexity: 'O(n log n)', spaceComplexity: 'O(n)' },
   { id: 'int-insert', title: 'Insert Interval', categoryId: 'intervals', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['intervals', 'binary-search'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
   { id: 'int-meeting-rooms', title: 'Meeting Rooms', categoryId: 'intervals', difficulty: 'intermediate', estimatedMinutes: 10, tags: ['intervals', 'sorting', 'heap'], timeComplexity: 'O(n log n)', spaceComplexity: 'O(n)' },
+  // Greedy
+  { id: 'greedy-jump-game', title: 'Jump Game I & II', categoryId: 'greedy', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['greedy', 'array', 'jump-game'], timeComplexity: 'O(n)', spaceComplexity: 'O(1)' },
+  { id: 'greedy-intervals', title: 'Interval Scheduling & Meeting Rooms', categoryId: 'greedy', difficulty: 'intermediate', estimatedMinutes: 25, tags: ['greedy', 'intervals', 'sorting', 'heap'], timeComplexity: 'O(n log n)', spaceComplexity: 'O(n)' },
+  { id: 'greedy-gas-station', title: 'Gas Station Circular Tour', categoryId: 'greedy', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['greedy', 'array', 'circular'], timeComplexity: 'O(n)', spaceComplexity: 'O(1)' },
+  { id: 'greedy-task-scheduler', title: 'Task Scheduler', categoryId: 'greedy', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['greedy', 'counting', 'task-scheduler'], timeComplexity: 'O(n)', spaceComplexity: 'O(1)' },
+  { id: 'greedy-two-city', title: 'Two-City Scheduling', categoryId: 'greedy', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['greedy', 'sorting', 'two-city'], timeComplexity: 'O(n log n)', spaceComplexity: 'O(1)' },
+  // Bit Manipulation
+  { id: 'bit-basics', title: 'Bit Operations Cheatsheet', categoryId: 'bit-manipulation', difficulty: 'beginner', estimatedMinutes: 15, tags: ['bit-manipulation', 'fundamentals', 'bitmask'], timeComplexity: 'O(1)', spaceComplexity: 'O(1)' },
+  { id: 'bit-xor-tricks', title: 'XOR Tricks', categoryId: 'bit-manipulation', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['bit-manipulation', 'xor', 'single-number'], timeComplexity: 'O(n)', spaceComplexity: 'O(1)' },
+  { id: 'bit-counting', title: 'Counting Bits', categoryId: 'bit-manipulation', difficulty: 'beginner', estimatedMinutes: 15, tags: ['bit-manipulation', 'dynamic-programming', 'counting-bits'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'bit-masks', title: 'Bitmask for Subsets', categoryId: 'bit-manipulation', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['bit-manipulation', 'bitmask', 'subsets', 'combinatorics'], timeComplexity: 'O(2^n · n)', spaceComplexity: 'O(n)' },
+  { id: 'bit-reverse', title: 'Reverse Bits', categoryId: 'bit-manipulation', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['bit-manipulation', 'reverse-bits', '32-bit'], timeComplexity: 'O(1)', spaceComplexity: 'O(1)' },
+  // Topological Sort
+  { id: 'topo-kahn', title: "Kahn's Algorithm (BFS Topological Sort)", categoryId: 'topological-sort', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['topological-sort', 'BFS', 'graphs', 'cycle-detection'], timeComplexity: 'O(V + E)', spaceComplexity: 'O(V + E)' },
+  { id: 'topo-dfs', title: 'DFS-Based Topological Sort', categoryId: 'topological-sort', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['topological-sort', 'DFS', 'graphs', 'cycle-detection'], timeComplexity: 'O(V + E)', spaceComplexity: 'O(V)' },
+  { id: 'topo-course-schedule', title: 'Course Schedule I & II', categoryId: 'topological-sort', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['topological-sort', 'BFS', 'course-schedule', 'cycle-detection'], timeComplexity: 'O(V + E)', spaceComplexity: 'O(V + E)' },
+  { id: 'topo-alien-dict', title: 'Alien Dictionary', categoryId: 'topological-sort', difficulty: 'advanced', estimatedMinutes: 30, tags: ['topological-sort', 'BFS', 'alien-dictionary', 'graphs', 'strings'], timeComplexity: 'O(C)', spaceComplexity: 'O(1)' },
+  // Stack / Monotonic Stack
+  { id: 'stack-basics', title: 'Stack Basics: Push / Pop / Peek', categoryId: 'stack', difficulty: 'beginner', estimatedMinutes: 10, tags: ['stack', 'deque', 'parentheses'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'stack-min', title: 'Min Stack (O(1) getMin)', categoryId: 'stack', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['stack', 'design', 'min-stack'], timeComplexity: 'O(1)', spaceComplexity: 'O(n)' },
+  { id: 'stack-monotonic-increasing', title: 'Monotonic Increasing Stack', categoryId: 'stack', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['stack', 'monotonic', 'next-smaller'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'stack-monotonic-decreasing', title: 'Monotonic Decreasing Stack', categoryId: 'stack', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['stack', 'monotonic', 'next-greater', 'daily-temperatures'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  { id: 'stack-largest-rectangle', title: 'Largest Rectangle in Histogram', categoryId: 'stack', difficulty: 'advanced', estimatedMinutes: 25, tags: ['stack', 'monotonic', 'histogram', 'hard'], timeComplexity: 'O(n)', spaceComplexity: 'O(n)' },
+  // Matrix / 2D Grid
+  { id: 'matrix-bfs', title: 'BFS on 2D Grid', categoryId: 'matrix', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['matrix', 'bfs', 'grid', 'flood-fill', 'islands'], timeComplexity: 'O(m·n)', spaceComplexity: 'O(m·n)' },
+  { id: 'matrix-dfs', title: 'DFS on 2D Grid', categoryId: 'matrix', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['matrix', 'dfs', 'grid', 'recursion', 'islands'], timeComplexity: 'O(m·n)', spaceComplexity: 'O(m·n)' },
+  { id: 'matrix-spiral', title: 'Spiral Matrix Traversal', categoryId: 'matrix', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['matrix', 'spiral', 'boundaries', 'simulation'], timeComplexity: 'O(m·n)', spaceComplexity: 'O(1)' },
+  { id: 'matrix-rotate', title: 'Rotate Matrix In-Place', categoryId: 'matrix', difficulty: 'intermediate', estimatedMinutes: 15, tags: ['matrix', 'rotate', 'transpose', 'in-place'], timeComplexity: 'O(n²)', spaceComplexity: 'O(1)' },
+  { id: 'matrix-dp', title: 'Matrix DP: Unique Paths & Min Path Sum', categoryId: 'matrix', difficulty: 'intermediate', estimatedMinutes: 20, tags: ['matrix', 'dp', 'unique-paths', 'min-path-sum'], timeComplexity: 'O(m·n)', spaceComplexity: 'O(m·n)' },
 ]
 
 export function getTemplatesByCategory(categoryId: string): TemplateMeta[] {
@@ -124,6 +168,12 @@ export async function loadCategory(categoryId: string) {
     'trees': () => import('./templates/trees'),
     'graphs': () => import('./templates/graphs'),
     'intervals': () => import('./templates/intervals'),
+    'hash-map': () => import('./templates/hash-map'),
+    'greedy': () => import('./templates/greedy'),
+    'bit-manipulation': () => import('./templates/bit-manipulation'),
+    'topological-sort': () => import('./templates/topological-sort'),
+    'stack': () => import('./templates/stack'),
+    'matrix': () => import('./templates/matrix'),
   }
 
   const loader = loaders[categoryId]

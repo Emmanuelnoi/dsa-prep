@@ -104,20 +104,20 @@ export function resetState(): void {
   }
 }
 
-export function recordActivity(): void {
+export function recordActivity(): StreakData {
   const state = loadState()
   const today = new Date().toISOString().split('T')[0]
   const { streak } = state
 
-  if (streak.lastActiveDate === today) return
+  if (streak.lastActiveDate === today) return streak
 
   const yesterday = new Date(Date.now() - 86_400_000).toISOString().split('T')[0]
   const newCurrent = streak.lastActiveDate === yesterday ? streak.current + 1 : 1
   const newLongest = Math.max(newCurrent, streak.longest)
+  const newStreak: StreakData = { current: newCurrent, longest: newLongest, lastActiveDate: today }
 
-  saveState({
-    streak: { current: newCurrent, longest: newLongest, lastActiveDate: today },
-  })
+  saveState({ streak: newStreak })
+  return newStreak
 }
 
 export function getNextInterval(rating: string, currentInterval: number): number {

@@ -12,9 +12,9 @@ function useAppState() {
 
   const setProgress = useCallback(
     (templateId: string, status: TopicStatus) => {
-      recordActivity()
+      const streak = recordActivity()
       const progress = { ...state.progress, [templateId]: status }
-      update({ progress })
+      update({ progress, streak })
     },
     [state.progress, update],
   )
